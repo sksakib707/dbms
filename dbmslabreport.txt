@@ -1,0 +1,882 @@
+# DDL
+
+- creating database:
+`sql CREATE DATABASE DDL; use DDL;`
+- 
+    1. Create a Table
+    `sql CREATE TABLE employees( id int AUTO_INCREMENT PRIMARY KEY, name varchar(100) NOT NULL, designation varchar(50), salary decimal(10,2) DEFAULT 5000 )`
+- 
+    1. Add a Column:
+    
+    ```sql
+    ALTER TABLE `employees` ADD COLUMN joining_date Date;
+    ```
+    
+- 
+    1. Modify a Column:
+    `sql ALTER TABLE `employees` MODIFY COLUMN employees.salary float;`
+- 
+    1. Drop a Column:
+    `sql ALTER TABLE `employees` DROP COLUMN employees.joining_date;`
+- 
+    1. Rename a Column:
+    `sql ALTER TABLE `employees` CHANGE employees.designation job_title varchar(50)`
+- 
+    1. Rename A Table
+    `sql RENAME TABLE `employees` to company_employees;`
+- 
+    1. Drop a Table:
+    `sql DROP TABLE `company_employees`;`
+- 
+    1. Truncate a Table: <!–deleting all data–!>
+    `sql TRUNCATE TABLE `table_name`;`
+    # DML
+- 
+    1. Insert three employees data:
+    `sql INSERT INTO `employees`(employees.id,employees.name,employees.job_title,employees.salary) VALUES (3,"Alice Brown","Analyst",7000), (4,"Bob White","Tester",8000), (5,"Charlie Black","Designer",6000);`
+- 
+    1. Select All Rows:
+    `sql SELECT * FROM `employees` WHERE 1;`
+- 
+    1. Select Specific Columns:
+    `sql SELECT employees.name,employees.job_title FROM `employees` WHERE 1;`
+- 
+    1. Select with Condition:
+    `sql SELECT * FROM `employees` WHERE employees.salary > 8000;`
+- 
+    1. Select with LIKE operator:
+    `sql SELECT employees.name FROM `employees` WHERE employees.name LIKE "j%";`
+- 
+    1. Update Salary:
+    `sql UPDATE `employees` SET employees.salary = 12000 WHERE employees.id = 1;`
+- 
+    1. Update Multiple Columns:
+    `sql UPDATE `employees` SET employees.salary = 15000 and employees.designation = 'Senior Developer' WHERE employees.id = 2;`
+- 
+    1. Delete a Row:
+    `sql DELETE FROM `employees` WHERE employees.id = 5;`
+- 
+    1. Delete Rows With a Condition
+    `sql DELETE FROM `employees` WHERE employees.salary < 7000;`
+- 
+    1. Select with ORDER BY:
+    `sql SELECT * FROM `employees` ORDER BY employees.salary DESC;`
+    # DISTINCT , AND , OR , NOT , BETWEEN and LIKE
+- 
+    1. List unique designation in this employees table:
+    
+    ```sql
+    SELECT DISTINCT employees.designation,employees.salary FROM `employees` WHERE 1;
+    ```
+    
+- 
+    1. Find the unizue combinations of designations of designation and salary:
+    `sql SELECT DISTINCT employees.designation and employees.salary FROM `employees` WHERE 1;`
+- 
+    1. Cound the number of unizue designation;
+    
+    ```sql
+    SELECT COUNT(DISTINCT employees.designation) FROM `employees` WHERE 1;
+    ```
+    
+- 
+    1. Find employees with a salary greater than 5000 and a designation of ‘Manager’:
+    
+    ```sql
+    SELECT * FROM `employees` WHERE employees.salary > 5000 and employees.designation = 'Manager';
+    ```
+    
+- 
+    1. Retrieve employees whose name starts with ‘A’ and salary is between 5000 and 10000:
+    
+    ```sql
+    SELECT * FROM `employees` WHERE employees.name LIKE 'A%' and salary > 5000 and salary < 10000;
+    ```
+    
+- 
+    1. Find employees with a designation of ‘Developer’ and salary less than 20000:
+    `sql SELECT * FROM `employees` WHERE employees.designation = 'Developer' AND employees.salary < 20000;`
+- 
+    1. Find employees with a salary greater than 50000 or a designation of ‘Intern’:
+    `sql SELECT * FROM `employees` WHERE employees.salary > 50000 OR employees.designation = 'Intern';`
+- 
+    1. Retrieve employees whose name starts with ‘J’ or salary is exactly 5000:
+    `sql SELECT * FROM `employees` WHERE employees.name LIKE "J%" OR employees.salary = 5000;`
+- 
+    1. List employees who are either ‘Manager’ or ‘Team Lead’:
+    `sql SELECT * FROM `employees` WHERE employees.designation = 'Manager' OR employees.designation = 'Team Lead';`
+- 
+    1. Find employees who do not have a salary equal to 5000:
+    `sql SELECT * FROM `employees` WHERE employees.salary != 5000;`
+- 
+    1. Retrieve emplo yees whose designation is not ‘Developer’:
+    `sql SELECT * FROM `employees` WHERE `employees`.`designation` != 'Developer';`
+- 
+    1. Find employees whose name does not contain the letter ‘e’:
+    
+    ```sql
+    SELECT * FROM `employees` WHERE `employees`.`name` NOT LIKE "%e%";
+    ```
+    
+- 
+    1. Find employees whose salary is between 10000 and 30000:
+    `sql SELECT * FROM `employees` WHERE `employees`.`salary` BETWEEN 10000 AND 30000;`
+- 
+    1. Retrieve employees with id values between 9 and 15:
+    
+    ```sql
+    SELECT * FROM `employees` WHERE `employees`.`id` BETWEEN 5 AND 15;
+    ```
+    
+- 
+    1. Find employees whose salary in not between 5000 and 20000:
+    `sql SELECT * FROM `employees` WHERE employees.salary NOT BETWEEN 5000 AND 20000;`
+- 
+    1. Find all employees whose names start with the letter A.
+    `sql SELECT * FROM `employees` WHERE employees.name LIKE "A%";`
+- 
+    1. Find all employees whose name end with the letter n.
+    ```sql SELECT * FROM`employees` WHERE employees.name LIKE “%n”;
+- 
+    1. Find all employees whose names contain the substring John.
+    `sql SELECT * FROM `employees` WHERE employees.name LIKE "%John%";`
+- 
+    1. Find all employees whose name are exactly 5 characters long
+    `sql SELECT * FROM `employees` WHERE LENGTH(`employees`.`name`) = 5;`
+- 
+    1. Find all employees whose designations start with M and end with r
+    `sql SELECT * FROM `employees` WHERE employees.designation LIKE "M%" AND employees.designation LIKE "%r";`
+- 
+    1. Find all employees whose names have e as the second letter.
+    `sql SELECT * FROM `employees` WHERE employees.name LIKE "_e%";`
+- 
+    1. Find all employees whose names do not contain the letter z
+    `sql SELECT * FROM `employees` WHERE employees.name NOT LIKE "%z%";`
+    # Aggregate Function
+- 
+    1. write a query to calculate the total salary of all employees in the employees table.
+    `sql SELECT SUM(employees.salary) as total_salary FROM `employees` WHERE 1;`
+- 
+    1. write a query to find the average salary of employees.
+    `sql SELECT AVG(employees.salary) as avg_salary FROM `employees` WHERE 1;`
+- 
+    1. write a query to count the total number of employees in the table.
+    `sql SELECT COUNT(employees.id) as total_emp FROM `employees` WHERE 1;`
+- 
+    1. write a query to find the highest salary among employees.
+    `sql SELECT MAX(employees.salary) as max_salary FROM `employees` WHERE 1;`
+- 
+    1. write a query to find the lowest salary in the employees table.
+    `sql SELECT MIN(employees.salary) as min_salary FROM `employees` WHERE 1;`
+- 
+    1. write a query to count the number of employees
+    `sql SELECT COUNT(employees.id) as total_emp FROM `employees` WHERE 1;`
+    # GROUP BY , HAVING, ORDER BY
+- 
+    1. write a query to find the total salary per department.
+    `sql SELECT SUM(employees.salary) as total_salary_per_dept FROM `employees` GROUP BY employees.designation;`
+- 
+    1. Find the average salary of employees in the ‘HR’ department
+    `sql SELECT AVG(employees.salary) as total_salary_per_dept FROM `employees` WHERE employees.designation='HR' GROUP BY employees.designation;`
+- 
+    1. List department with more than 1 employee and their average salary
+    `sql SELECT employee.department , AVG(employee.salary) as avg_salary FROM `employee` GROUP BY employee.department HAVING COUNT(employee.employee_id) > 1;`
+- 
+    1. Order employees by salary in descending order.
+    ```sql SELECT * FROM`employee` ORDER BY employee.salary DESC;
+- 
+    1. Find the highest salary in each departemnt sql
+    SELECT * FROM `employee` GROUP BY employee.department ORDER BY employee.salary DESC;
+    ```
+- 
+    1. List all employees who have a salary greater than 5000 and order them by name.
+    `sql SELECT * FROM `employee` WHERE employee.salary > 5000 ORDER BY employee.name;`
+- 
+    1. Count the number of employees in each department and only show departemts with more than 1 employee.
+    `sql SELECT COUNT(employee.employee_id), department FROM `employee` GROUP BY employee.department HAVING COUNT(employee.employee_id) > 1;`
+- 
+    1. Find the employees who were hired after ‘2020-01-01’ and order them by hire_date.
+    `sql SELECT * FROM `employee` WHERE employee.hire_date > '2020-01-01' ORDER BY employee.hire_date;`
+- 
+    1. Get the sum of salaries of employees hire in 2020 or later
+    `sql SELECT SUM(employee.salary) as sum_salary FROM `employee` WHERE employee.hire_date > '2020-01-01';`
+- 
+    1. List employees who earn less then 5000 and order them by salary in ascending order
+    `sql SELECT * FROM `employee` WHERE employee.salary <5000 ORDER BY employee.salary ASC;`
+- 
+    1. Find the department with the maximum average salary
+    `sql SELECT department, AVG(salary) AS avg_salary FROM employee GROUP BY department ORDER BY avg_salary DESC LIMIT 1;`
+- 
+    1. List the departments that have employees with a salary greater than 6000
+    `sql SELECT department FROM employee WHERE employee.salary > 6000;`
+    # STORED PROCEDURE , VIEWS and TRIGGERS- 01
+- creating table:
+```sql
+CREATE TABLE employees(
+employee_id int AUTO_INCREMENT PRIMARY KEY,
+name varchar(50),
+department varchar(20),
+salary int );
+    
+    INSERT INTO employees(name, department , salary)VALUES
+    (“Alice”,“HR”,5000),
+    (“Bob”,“IT”,6000),
+    (“Charlie”,“HR”,5500)
+    
+    ```
+    ```sql
+    CREATE TABLE departments(department_id int AUTO_INCREMENT PRIMARY KEY,department_name varchar(20));
+    
+    INSERT INTO departments(department_name)
+    VALUES("HR"),("IT");
+    ```
+    
+    ```sql
+    CREATE TABLE projects(project_id int AUTO_INCREMENT PRIMARY KEY, project_name varchar(30),department_id int);
+    INSERT INTO projects(project_name , department_id)
+    VALUES('Project A', 1),
+       ('Project B', 2);
+    ```
+    
+- 
+    1. Creat a Stred Procedure to get employee salary by department
+    
+    ```sql
+       DELIMITER $$
+      CREATE PROCEDURE emp_salary_by_dep(department_name varchar(20))
+      BEGIN      SELECT `employees`.`salary` FROM `employees`
+         WHERE employees.department = department_name
+      END $$
+      DELIMITER ;
+    ```
+    
+- 
+    1. Create a Stored Procedure to Update Employee Salary.
+    
+    ```sql
+       DELIMITER $$
+      CREATE PROCEDURE update_emp_salary(emp_id int ,salary int)
+      BEGIN      UPDATE `employees` SET employees.salary = salary WHERE employees.employee_id = emp_id;
+      END $$
+      DELIMITER ;
+    ```
+    
+- 
+    1. Create a Stored Procedure to Inset a new Employee
+    
+    ```sql
+       DELIMITER $$
+      CREATE PROCEDURE insert_emp(name varchar(50) , department varchar(20) , salary int)
+      BEGIN      INSERT INTO `employees`(employees.name , employees.department , employees.salary)
+         VALUES(name , department , salary);
+      END $$
+      DELIMITER ;
+    ```
+    
+- 
+    1. Create a Stored Procedure to Get Employees with Salary Greater Than a Certain Amount
+    
+    ```sql
+      DELIMITER $$
+     CREATE PROCEDURE emp_salarygratter(salary int)
+     BEGIN     SELECT * FROM `employees` WHERE employees.salary > salary;
+     END $$
+     DELIMITER ;
+    ```
+    
+- 
+    1. Create a Stored Precedure to Delete Employee by ID
+    
+    ```sql
+      DELIMITER $$
+      CREATE PROCEDURE emp_delete(ID int)
+      BEGIN      DELETE FROM `employees` WHERE employees.employee_id = ID;
+      END $$
+      DELIMITER ;
+    ```
+    
+- 
+    1. Create a View to Show Employees and Their Departments
+    
+    ```sql
+       CREATE VIEW emp_and_dept AS  SELECT employees.employee_id , employees.name FROM `employees`;
+    ```
+    
+- 
+    1. Create a View to Show Employees with Salary Above 6000
+    
+    ```sql
+      CREATE VIEW emp_salay AS  SELECT employees.employee_id , employees.name, employees.salary
+      FROM `employees` WHERE employees.salary > 6000;
+    ```
+    
+- 
+    1. Create a View to Show Projects with their Department Names
+    
+    ```sql
+       CREATE VIEW project_dept AS  SELECT projects.project_name , departments.department_name FROM `projects`
+      JOIN `departments` ON projects.department_id = departments.department_id;
+    ```
+    
+- 
+    1. Create a View to Get Employee and Project Details
+    
+    ```sql
+       CREATE VIEW emp_project AS   SELECT employees.employee_id,employees.name,`departments`.`department_name`,employees.salary , `projects`.`project_name` FROM `employees`
+    JOIN `departments` ON `employees`.`department` = `departments`.`department_name`
+    JOIN `projects` ON `departments`.`department_id` = `projects`.`department_id`;
+    ```
+    
+- 
+    1. create a View to Show Total Salary of Employee in Each Department
+    
+    ```sql
+       CREATE VIEW IF NOT EXISTS sum_salary_dept AS  SELECT SUM(`employees`.`salary`) FROM `employees`
+      GROUP BY `employees`.`department`;
+    ```
+    
+- 
+    1. Create a Trigger to Automatically Update Employees in Each Department
+    - creating the table:
+    
+    ```sql
+    CREATE TABLE salary_history(employee_id int, old_salary int , new_salary int)
+    ```
+    
+    ```sql
+    DELIMITER $$
+    CREATE TRIGGER update_salary
+    AFTER UPDATE ON `employees`
+    FOR EACH ROW
+    BEGIN    
+    INSERT INTO `salary_history`(salary_history.employee_id ,salary_history.old_salary , salary_history.new_salary)
+       VALUES(NEW.`employee_id`,OLD.salary , NEW.salary);
+    END $$
+    DELIMITER ;
+    ```
+    
+- 
+    1. Create a Trigger to Prevent Deleting Employees with Salary Above 7000
+    
+    ```sql
+      DELIMITER $$
+      CREATE TRIGGER prevent_del
+      BEFORE DELETE ON `employees` FOR EACH ROW  BEGIN   IF OLD.salary > 7000 THEN       SIGNAL SQLSTATE '45000'       SET MESSAGE_TEXT = "CAN'T DELETE , because salary > 7000" ;
+       END IF ;
+      END $$
+      DELIMITER ;
+    ```
+    
+- 
+    1. Create a Trigger to Automatically Update Department’s Average Salary After Salary Change
+- creating new table avg_salary
+    
+    ```sql
+    
+    CREATE TABLE avg_salary_dept(id int AUTO_INCREMENT PRIMARY KEY,
+    								department_name varchar(20), avg_salary int )
+    
+    ```
+    
+    ```sql
+    DELIMITER $$ 
+    CREATE TRIGGER IF NOT EXISTS avg_dept_salary 
+    AFTER UPDATE ON `employees` 
+    FOR EACH ROW 
+    BEGIN 
+    IF NOT EXISTS (SELECT 1 FROM `avg_salary_dept` 
+    									WHERE avg_salary_dept.department_name = NEW.`department`) THEN 
+    		INSERT INTO avg_salary_dept( 
+    							avg_salary_dept.department_name, 
+    							avg_salary_dept.avg_salary) 
+    		VALUES( NEW.department,(SELECT AVG(`employees`.`salary`) 
+    			FROM `employees` WHERE `employees`.`department` = NEW.department)) ;
+    ELSE 
+    	UPDATE `avg_salary_dept` 
+    	SET `avg_salary_dept`.`avg_salary` =( SELECT AVG(`employees`.`salary`) 
+    	FROM `employees` WHERE `employees`.`department` = NEW.department ) 
+    	WHERE avg_salary_dept.department_name = NEW.department; 
+    END IF ; 
+    END $$ 
+    DELIMITER ;
+    ```
+    
+- 
+    1. Create a Trigger to Insert a Record in the Audit Table After Employee Insert
+- creating table `audit`
+    
+    ```sql
+    CREATE TABLE audit(
+    employee_id int , action varchar(20) , 
+    action_date date DEFAULT CURRENT_DATE)
+    
+    DELIMITER $$ 
+    CREATE TRIGGER audit_trigger 
+    AFTER INSERT ON `employees` 
+    FOR EACH ROW 
+    BEGIN 
+    		INSERT INTO `audit`(audit.employee_id,audit.action) 
+    		VALUES(NEW.employee_id,"insert"); 
+    END $$ 
+    DELIMITER ;
+    ```
+    
+
+1. Creating a Trigger to Update Project’s Department When Department ID Changes
+    
+    ```sql
+    DELIMITER $$ 
+    CREATE TRIGGER project_update 
+    AFTER UPDATE ON `departments` 
+    FOR EACH ROW 
+    BEGIN 
+    		UPDATE `projects` 
+    		SET `projects`.`department_id` = NEW.department_id
+    		WHERE `projects`.`department_id` = OLD.department_id ; 
+    END $$ 
+    DELIMITER ;
+    ```
+    
+
+# Stored Procedure, Views and Triggers - 02
+
+1. Write a stored procedure to insert a new course into the  `Courses` table , specifying the course `ID , name , credits , department` 
+
+```sql
+DELIMITER $$
+CREATE PROCEDURE insert_course(p_coure_id int , 
+																p_course_name varchar(20),
+																p_credits int , 
+																p_course_department varchar(20))
+BEGIN
+	INSERT INTO `courses`(`courses`.`CourseID` , 
+												`courses`.`CourseName`,
+												`courses`.`Credits` , 
+												`courses`.`Department`)
+  VALUES(p_course_id , p_course_name ,p_credits , p_course_department);
+END $$
+DELIMITER ;
+```
+
+1. Create a stored procedure to retrieve the list of students enrolled in a particular course
+
+```sql
+DELIMITER $$
+CREATE PROCEDURE list_students(course_name varchar(20))
+BEGIN
+	SELECT * FROM `students` WHERE students.Department = course_name;
+END $$
+DELIMITER ;
+
+```
+
+1. Develop a stored procedure to update the grade of a student for a specific course.
+
+```sql
+DELIMITER $$
+CREATE PROCEDURE update_grade(student_id int , course_name varchar(20),grade varchar(5))
+BEGIN
+	UPDATE `enrollments` SET `enrollments`.`Grade` = grade 
+    WHERE `enrollments`.`CourseID` =  
+    (SELECT `courses`.`CourseID` FROM `courses` 
+     	WHERE `courses`.`CourseName` = course_name) 
+    AND `enrollments`.`StudentID` = student_id;
+                                       
+END $$
+DELIMITER ;
+```
+
+1. Write a stored procedure to delete a student record based on their *StudentID*
+
+```sql
+DELIMITER $$
+CREATE PROCEDURE delete_student(student_id int)
+BEGIN
+   DELETE FROM `students` WHERE  `students`.`StudentID` = student_id;
+	 DELETE FROM `enrollments` WHERE `enrollments`.`StudentID` = student_id;
+END $$
+DELIMITER ;
+```
+
+1. Create a stored procedure to fetch all courses taught by a specific faculty member in a given semester
+
+```sql
+DELIMITER $$
+
+CREATE PROCEDURE fetch_courses(
+    IN teacher_name VARCHAR(50),
+    IN semester VARCHAR(10)
+)
+BEGIN
+    SELECT c.CourseID, c.CourseName, c.Credits, c.Department
+    FROM Courses c
+    JOIN Teaches t ON c.CourseID = t.CourseID
+    JOIN Faculty f ON t.FacultyID = f.FacultyID
+    WHERE f.FacultyName = teacher_name
+    AND t.Semester = semester;
+END $$
+
+DELIMITER ;
+
+```
+
+1. Create a view that display the list of students and their respective departments.
+
+```sql
+CREATE VIEW IF NOT EXISTS detalisEverything AS
+	SELECT `courses`.`CourseID`, `courses`.`CourseName`, `courses`.`Credits` ,
+	 `courses`.`Department`, faculty.FacultyName, `teaches`.`Semester` 
+	 FROM 		`courses`
+    JOIN `faculty` ON `courses`.`Department` = `faculty`.`Department`
+    JOIN `teaches` ON `courses`.`CourseID` = `teaches`.`CourseID`
+    
+```
+
+1. Write a view to display all students along with the curses they are enrolled in and their grades
+
+```sql
+CREATE VIEW IF NOT EXISTS studentCoursesEnrolled AS
+	SELECT `students`.`StudentID` , `students`.`Name`,
+	`students`.`Department`,`students`.`Email`,`courses`.`CourseName` , 
+	`enrollments`.`Grade`,`teaches`.`Semester`
+    FROM `students`
+    JOIN `courses` ON `students`.`Department` = `courses`.`Department`
+    JOIN `enrollments` ON `students`.`StudentID` = `enrollments`.`StudentID`
+    JOIN `teaches` ON `courses`.`CourseID` = `teaches`.`CourseID`;
+```
+
+1. Create a view that lists the average grade for each course
+
+```sql
+
+```
+
+# Join
+
+1. Find employees not assigned to any project
+
+```sql
+SELECT e.EmployeeID, e.Name FROM `employee` e
+LEFT JOIN `projects` p ON e.EmployeeID = p.EmployeeID
+WHERE p.ProjectID IS NULL;
+
+```
+
+1. Find the average salary for each department
+
+```sql
+SELECT d.DepartmentName , AVG(e.Salary) FROM `departments` d 
+JOIN `employee` e ON d.DepartmentID = e.DepartmentID
+GROUP BY d.DepartmentID;
+
+```
+
+1. List all employees, their departments and projects.
+
+```sql
+SELECT e.EmployeeID, e.Name , d.DepartmentID , 
+d.DepartmentName, p.ProjectID , p.ProjectName 
+FROM `employee` e
+LEFT JOIN `departments` d ON e.DepartmentID = d.DepartmentID 
+LEFT JOIN `projects` p ON e.EmployeeID = p.EmployeeID
+
+```
+
+1. Find the department with the highest total salary
+
+```sql
+SELECT d.DepartmentID , d.DepartmentName , SUM(e.Salary) as total_salary 
+FROM `departments` d
+JOIN `employee` e ON d.DepartmentID = e.DepartmentID
+GROUP BY d.DepartmentID
+ORDER BY total_salary DESC;
+```
+
+1. List employees working under a specific manager
+
+```sql
+SELECT e.EmployeeID , e.Name , p.ProjectName FROM `employee` e 
+JOIN `projects` p ON e.EmployeeID = p.EmployeeID
+WHERE p.ProjectID IS NOT NULL
+```
+
+# Sub Query
+
+1. List Employees who are assigned to a project
+
+```sql
+SELECT *  FROM `employees` e
+JOIN `employeeprojects` ep ON e.EmployeeID = ep.EmployeeID
+WHERE e.EmployeeID IN (SELECT `employeeprojects`.`EmployeeID` FROM `employeeprojects`)
+```
+
+1. Find the Employee with the Highest Salary in the **’HR’** department
+
+```sql
+SELECT *  FROM `employees` e
+WHERE e.Salary = 
+(SELECT MAX(`employees`.`Salary`) FROM `employees` 
+ JOIN `departments` ON `employees`.`DepartmentID` = `departments`.`DepartmentID` 
+ WHERE  `departments`.`DepartmentName` = 'HR');
+```
+
+1. Get Departments That Have More Than 2 Employees
+
+```sql
+SELECT *  FROM `departments` d
+JOIN `employees` e ON d.DepartmentID  = e.DepartmentID
+GROUP BY  d.`DepartmentID`
+HAVING COUNT(e.EmployeeID) > 2;
+```
+
+1. List Employees Whose Salary is Above the Average Salary of All Employees
+
+```sql
+SELECT * FROM `employees` 
+WHERE `employees`.`Salary` > 
+(SELECT AVG(`employees`.`Salary`) FROM `employees` );
+```
+
+1. Find Employees Who Are  Not Assigned to Any Project
+
+```sql
+SELECT * FROM `employees` 
+WHERE `employees`.`EmployeeID` NOT IN 
+(SELECT `employeeprojects`.`EmployeeID` FROM `employeeprojects`);
+```
+
+1. List Department That Do Not Have Any Employees with a Salary Above 6000
+
+```sql
+SELECT * FROM `departments` d
+JOIN `employees` e ON  d.DepartmentID = e.DepartmentID
+WHERE e.Salary  < 6000
+```
+
+1. Get Employees Who Earn More Than the Employee with the Highest Salary in the IT Department
+
+```sql
+SELECT * FROM `employees`
+WHERE `employees`.`Salary` > 
+(SELECT MAX(e.`Salary`) FROM `employees` e 
+ JOIN `departments` d ON e.DepartmentID = d.DepartmentID 
+ WHERE d.DepartmentName = 'IT');
+```
+
+1. Find Projects That Don’t Belongs to the **HR** Department
+
+```sql
+SELECT * FROM `projects`
+WHERE projects.DepartmentID NOT IN 
+(SELECT `departments`.`DepartmentID` 
+ FROM `departments` 
+ WHERE `departments`.`DepartmentName` = 'HR')
+```
+
+# DBMS - 8 problem solve
+
+1. Create above five tables with primary , foreign key  and at  least five values for all tables.
+    
+    ```sql
+    
+    CREATE TABLE Countries(
+        country_id INT PRIMARY KEY,
+        country_name VARCHAR(20)
+    );
+    CREATE TABLE Designations(
+        designation_id INT PRIMARY KEY,
+        designation_title VARCHAR(20)
+    );
+    
+    CREATE TABLE Locations(
+        location_id INT PRIMARY KEY,
+        location_title VARCHAR(20),
+        country_id INT,
+        FOREIGN  KEY(country_id) REFERENCES Countries(country_id)
+    );  
+    CREATE TABLE Departments(
+        department_id INT PRIMARY KEY,
+        department_name VARCHAR(20),
+        location_id INT,
+        FOREIGN KEY(location_id) REFERENCES Locations(location_id)
+    ); 
+    CREATE TABLE Employees(
+        emp_id INT PRIMARY KEY,
+        NAME VARCHAR(20),
+        hire_date DATE,
+        email VARCHAR(20),
+        salary INT,
+        designation_id INT,
+        department_id INT,
+        FOREIGN KEY(designation_id) REFERENCES Designations(designation_id),
+        FOREIGN  KEY(department_id) REFERENCES Departments(department_id)
+    ); 
+    
+    -- inserting datas
+    -- Insert into Countries
+    INSERT INTO Countries (country_id, country_name) VALUES
+    (1, 'USA'),
+    (2, 'Canada'),
+    (3, 'UK'),
+    (4, 'Germany'),
+    (5, 'India'),
+    (6, 'Australia'),
+    (7, 'China'),
+    (8, 'Japan'),
+    (9, 'France'),
+    (10, 'Brazil');
+    
+    -- Insert into Designations
+    INSERT INTO Designations (designation_id, designation_title) VALUES
+    (1, 'Manager'),
+    (2, 'Software Engineer'),
+    (3, 'Analyst'),
+    (4, 'HR Specialist'),
+    (5, 'Sales Representative'),
+    (6, 'Marketing Executive'),
+    (7, 'Intern'),
+    (8, 'Data Scientist'),
+    (9, 'Project Manager'),
+    (10, 'Network Administrator');
+    
+    -- Insert into Locations
+    INSERT INTO Locations (location_id, location_title, country_id) VALUES
+    (1, 'New York', 1),
+    (2, 'Toronto', 2),
+    (3, 'London', 3),
+    (4, 'Berlin', 4),
+    (5, 'Mumbai', 5),
+    (6, 'Sydney', 6),
+    (7, 'Beijing', 7),
+    (8, 'Tokyo', 8),
+    (9, 'Paris', 9),
+    (10, 'São Paulo', 10);
+    
+    -- Insert into Departments
+    INSERT INTO Departments (department_id, department_name, location_id) VALUES
+    (1, 'IT', 1),
+    (2, 'HR', 2),
+    (3, 'Finance', 3),
+    (4, 'Marketing', 4),
+    (5, 'Sales', 5),
+    (6, 'Operations', 6),
+    (7, 'Engineering', 7),
+    (8, 'R&D', 8),
+    (9, 'Customer Support', 9),
+    (10, 'Legal', 10);
+    
+    -- Insert into Employees
+    INSERT INTO Employees (emp_id, name, hire_date, 
+    email, salary, designation_id, department_id) 
+    VALUES
+    (1, 'Alice Johnson', '2020-01-15', 'alice@example.com', 70000, 2, 1),
+    (2, 'Bob Smith', '2019-03-22', 'bob@example.com', 80000, 1, 3),
+    (3, 'Charlie Brown', '2021-06-10', 'charlie@example.com', 60000, 3, 5),
+    (4, 'David White', '2018-07-18', 'david@example.com', 90000, 9, 2),
+    (5, 'Eve Black', '2022-02-25', 'eve@example.com', 50000, 4, 4),
+    (6, 'Frank Green', '2020-11-30', 'frank@example.com', 75000, 6, 6),
+    (7, 'Grace Lee', '2017-09-05', 'grace@example.com', 55000, 5, 7),
+    (8, 'Hank Adams', '2023-04-12', 'hank@example.com', 48000, 7, 8),
+    (9, 'Ivy Brown', '2015-12-20', 'ivy@example.com', 95000, 8, 9),
+    (10, 'Jack Wilson', '2016-08-29', 'jack@example.com', 72000, 10, 10);
+    
+    ```
+    
+2. Write a query to display employee name , department , country and designation of **HR** department
+
+```sql
+SELECT `employees`.`NAME`,`departments`.`department_name`,
+`countries`.`country_name`,`designations`.`designation_title` 
+FROM `employees`
+JOIN `departments` ON `employees`.`department_id` = `departments`.`department_id`
+JOIN `locations` ON `departments`.`location_id` = `locations`.`location_id`
+JOIN `countries` ON `locations`.`country_id` = `countries`.`country_id`
+JOIN `designations` ON `employees`.`designation_id` = `designations`.`designation_id`
+WHERE `departments`.`department_name` = 'HR';
+```
+
+1. Write a query to employee name who is taking second highest salary using sub query concept
+
+```sql
+SELECT `employees`.`NAME`  FROM `employees` 
+WHERE `employees`.`salary` < 
+ (SELECT MAX(`employees`.`salary`) FROM `employees`) 
+ORDER BY `employees`.`salary` DESC LIMIT 1;
+```
+
+1. Write a SQL statement to update the email column of *Employee* table with `'not available'` for those employees with department name `'Finance'`
+
+```sql
+UPDATE `employees` SET `employees`.`email` = 'Not Available' 
+ WHERE `employees`.`department_id` =
+ (SELECT `departments`.`department_id` FROM `departments` 
+  WHERE `departments`.`department_name` = 'Finance');
+```
+
+1. Write a SQL statement to add a new column `'year_of_establishment'` to `'Departments'` table
+
+```sql
+ALTER TABLE `departments` ADD COLUMN year_of_establishment varchar(20) ; 
+```
+
+1. Write a Query to display the *employee id* , *name* and *designation_title* for all employees whose salary is more than any average salary of any department
+
+```sql
+SELECT `employees`.`emp_id` , `employees`.`NAME` ,  `designations`.`designation_title`
+FROM `employees`
+JOIN `designations` 
+ON `employees`.`designation_id` = `designations`.`designation_id`
+WHERE `employees`.`salary` > 
+(SELECT AVG(`employees`.`salary`) FROM `employees` );
+```
+
+1. Write a parameterized **procedure** to display employee name , department and country by passing employee id and country name as parameter
+
+```sql
+DELIMITER $$
+CREATE PROCEDURE displayDetails(employee_id  int , country_name varchar(20))
+BEGIN
+		SELECT `employees`.`NAME` , `departments`.`department_name` , 
+					`countries`.`country_name`
+    FROM `employees`
+    JOIN `departments` ON `employees`.`department_id` = `departments`.`department_id`
+    JOIN `locations` ON `departments`.`location_id` = `locations`.`location_id`
+    JOIN `countries` ON `locations`.`country_id` = `countries`.`country_id`
+    WHERE `countries`.`country_name` = country_name AND  
+    `employees`.`emp_id` = employee_id ;
+END $$
+DELIMITER ; 
+```
+
+1. Write a  query to illustrate the concept of complex views
+
+```sql
+DROP VIEW IF EXISTS displayDetails;
+CREATE VIEW displayDetails AS
+	SELECT `employees`.`NAME` , `departments`.`department_name` , 
+	`countries`.`country_name` , SUM(`employees`.`salary`)
+    FROM `employees`
+    JOIN `departments` ON `employees`.`department_id` = `departments`.`department_id`
+    JOIN `locations` ON `departments`.`location_id` = `locations`.`location_id`
+    JOIN `countries` ON `locations`.`country_id` = `countries`.`country_id`
+    GROUP BY `employees`.`department_id` ;
+
+```
+
+1. Write a SQL statement that will create a trigger which whenever an employee is deleted, the employee *id* and *name* will be inserted in a `archived` table
+
+```sql
+CREATE TABLE IF NOT EXISTS archived(
+        			employee_id int,
+        			employee_name varchar(30) );
+-- table can't be created inside trigger , it must be before a trigger
+DELIMITER $$
+CREATE TRIGGER trashEmployee
+AFTER DELETE ON `employees`
+FOR EACH ROW
+BEGIN
+	
+    INSERT INTO archived(employee_id, employee_name)VALUES(OLD.emp_id ,OLD.NAME);
+END $$
+DELIMITER ;
+```
