@@ -1,0 +1,154 @@
+-- -------------------------------
+-- PART 6: STORED PROCEDURES
+-- -------------------------------
+
+-- 1. Stored procedure to insert a new course
+DELIMITER //
+CREATE PROCEDURE InsertCourse(IN cID INT, IN cName VARCHAR(100), IN cCredits INT, IN cDept VARCHAR(50))
+BEGIN
+    INSERT INTO Courses (CourseID, CourseName, Credits, Department)
+    VALUES (cID, cName, cCredits, cDept);
+END //
+DELIMITER ;
+
+-- 2. Stored procedure to get students enrolled in a course
+DELIMITER //
+CREATE PROCEDURE GetStudentsByCourse(IN courseID INT)
+BEGIN
+    SELECT Students.StudentID, Students.Name, Students.Department
+    FROM Students
+    JOIN Enrollments ON Students.StudentID = Enrollments.StudentID
+    WHERE Enrollments.CourseID = courseID;
+END //
+DELIMITER ;
+
+-- 3. Stored procedure to update a student's grade
+DELIMITER //
+CREATE PROCEDURE UpdateStudentGrade(IN sID INT, IN cID INT, IN newGrade VARCHAR(5))
+BEGIN
+    UPDATE Enrollments
+    SET Grade = newGrade
+    WHERE StudentID = sID AND CourseID = cID;
+END //
+DELIMITER ;
+
+-- 4. Stored procedure to delete a student record
+DELIMITER //
+CREATE PROCEDURE DeleteStudent(IN sID INT)
+BEGIN
+    DELETE FROM Students WHERE StudentID = sID;
+END //
+DELIMITER ;
+
+-- 5. Stored procedure to get courses taught by a faculty member in a semester
+DELIMITER //
+CREATE PROCEDURE GetCoursesByFaculty(IN fID INT, IN sem VARCHAR(20))
+BEGIN
+    SELECT Courses.CourseID, Courses.CourseName, Courses.Credits, Courses.Department
+    FROM Courses
+    JOIN Teaches ON Courses.CourseID = Teaches.CourseID
+    WHERE Teaches.FacultyID = fID AND Teaches.Semester = sem;
+END //
+DELIMITER ;
+
+-- -------------------------------
+-- PART 7: VIEWS
+-- -------------------------------
+
+-- 1. View: List students and their departments
+CREATE VIEW StudentDepartment AS
+SELECT StudentID, Name, Department FROM Students;
+
+-- 2. View: Show courses, faculty, and semester
+CREATE VIEW CourseDetails AS
+SELECT Courses.CourseID, Courses.CourseName, Courses.Credits, Courses.Department, 
+       Faculty.FacultyName, Teaches.Semester
+FROM Courses
+JOIN Teaches ON Courses.CourseID = Teaches.CourseID
+JOIN Faculty ON Teaches.FacultyID = Faculty.FacultyID;
+
+-- 3. View: Students, their courses, and grades
+CREATE VIEW StudentCourses AS
+SELECT Students.StudentID, Students.Name, Enrollments.CourseID, Courses.CourseName, Enrollments.Grade
+FROM Students
+JOIN Enrollments ON Students.StudentID = Enrollments.StudentID
+JOIN Courses ON Enrollments.CourseID = Courses.CourseID;
+
+-- 4. View: Average grade for each course
+CREATE VIEW CourseAverageGrade AS
+SELECT CourseID, AVG(CASE WHEN Grade REGEXP '^[0-9]+$' THEN Grade ELSE NULL END) AS AverageGrade
+FROM Enrollments
+GROUP BY CourseID;
+
+-- 5. View: Faculty and number of courses they teach
+CREATE VIEW FacultyCourseCount AS
+SELECT Faculty.FacultyID, Faculty.FacultyName, COUNT(Teaches.CourseID) AS NumberOfCourses
+FROM Faculty
+LEFT JOIN Teaches ON Faculty.FacultyID = Teaches.FacultyID
+GROUP BY Faculty.FacultyID;
+
+-- -------------------------------
+-- PART 8: TRIGGERS
+-- -------------------------------
+
+-- 1. Trigger: Update student count in department
+CREATE TRIGGER UpdateStudentCount
+AFTER INSERT ON Students
+FOR EACH ROW
+BEGIN
+    UPDATE Department SET TotalStudents = TotalStudents + 1
+    WHERE Department.Name = NEW.Department;
+END;
+
+-- 2. Trigger: Prevent deletion of a course if students are enrolled
+CREATE TRIGGER PreventCourseDeletion
+BEFORE DELETE ON Courses
+FOR EACH ROW
+BEGIN
+    IF (SELECT COUNT(*) FROM Enrollments WHERE CourseID = OLD.CourseID) > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Cannot delete course with enrolled students';
+    END IF;
+END;
+
+-- 3. Trigger: Log changes in Enrollments table
+CREATE TABLE EnrollmentLogs (
+    LogID INT AUTO_INCREMENT PRIMARY KEY,
+    ActionType VARCHAR(10),
+    StudentID INT,
+    CourseID INT,
+    ActionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TRIGGER LogEnrollmentChanges
+AFTER INSERT OR UPDATE OR DELETE ON Enrollments
+FOR EACH ROW
+BEGIN
+    INSERT INTO EnrollmentLogs (ActionType, StudentID, CourseID)
+    VALUES (CASE WHEN INSERTING THEN 'INSERT'
+                 WHEN UPDATING THEN 'UPDATE'
+                 ELSE 'DELETE' END,
+            COALESCE(NEW.StudentID, OLD.StudentID),
+            COALESCE(NEW.CourseID, OLD.CourseID));
+END;
+
+-- 4. Trigger: Set grade to 'F' if NULL or invalid
+CREATE TRIGGER DefaultGrade
+BEFORE INSERT OR UPDATE ON Enrollments
+FOR EACH ROW
+BEGIN
+    IF NEW.Grade IS NULL OR NEW.Grade NOT REGEXP '^[A-F]$' THEN
+        SET NEW.Grade = 'F';
+    END IF;
+END;
+
+-- 5. Trigger: Alert when faculty teaches more than 5 courses
+CREATE TRIGGER FacultyCourseLimit
+AFTER INSERT ON Teaches
+FOR EACH ROW
+BEGIN
+    IF (SELECT COUNT(*) FROM Teaches WHERE FacultyID = NEW.FacultyID) > 5 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Faculty member cannot teach more than 5 courses';
+    END IF;
+END;
