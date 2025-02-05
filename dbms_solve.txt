@@ -1,0 +1,142 @@
+1. CREATE DATABASE employee_management;
+2.CREATE TABLE `employee_management`.`employees` (`emp_id` INT PRIMARY KEY, `name` VARCHAR(50) NOT NULL , `hire_date` DATE , `email` VARCHAR(50), `salary` INT , `designation_id` INT , `department_id` INT);
+
+CREATE TABLE Countries(
+    country_id int PRIMARY KEY,
+    country_name varchar(50)
+);
+CREATE TABLE Locations(
+    location_id int PRIMARY KEY,
+    location_title varchar(50),
+    country_id int,
+    FOREIGN KEY(country_id) REFERENCES Countries(country_id)
+);
+CREATE TABLE Designations(
+    designation_id int PRIMARY KEY,
+    designation_title varchar(50)
+);
+CREATE TABLE Departments(
+    department_id int PRIMARY KEY,
+    department_name varchar(50),
+    location_id int,
+    FOREIGN KEY(location_id) REFERENCES Locations(location_id)
+);
+CREATE TABLE Employees(
+    emp_id int PRIMARY KEY,
+    name varchar (50),
+    hire_date date,
+    email varchar(50),
+    salary int,
+    designation_id int,
+    department_id int,
+    FOREIGN KEY(designation_id) REFERENCES Designations(designation_id),
+    FOREIGN KEY(department_id) REFERENCES Departments(department_id)    
+);
+
+INSERT INTO `countries`(`country_id`, `country_name`) VALUES
+(1, 'United States'),
+(2, 'Canada'),
+(3, 'United Kingdom'),
+(4, 'Australia'),
+(5, 'Germany');
+
+INSERT INTO `locations`(`location_id`, `location_title`, `country_id`) VALUES
+(101, 'New York Office', 1),
+(102, 'Toronto Branch', 2),
+(103, 'London Headquarters', 3),
+(104, 'Sydney Office', 4),
+(105, 'Berlin Hub', 5);
+
+INSERT INTO `departments`(`department_id`, `department_name`, `location_id`) VALUES
+(1, 'Human Resources', 101),
+(2, 'Finance', 102),
+(3, 'IT', 103),
+(4, 'Marketing', 104),
+(5, 'Sales', 105);
+
+INSERT INTO `designations`(`designation_id`, `designation_title`) VALUES
+(1, 'Software Engineer'),
+(2, 'Data Analyst'),
+(3, 'Project Manager'),
+(4, 'HR Specialist'),
+(5, 'Marketing Executive');
+
+INSERT INTO `employees`(`emp_id`, `name`, `hire_date`, `email`, `salary`, `designation_id`, `department_id`) VALUES
+(1, 'John Doe', '2020-05-15', 'john.doe@example.com', 60000, 1, 3),
+(2, 'Alice Smith', '2019-08-22', 'alice.smith@example.com', 75000, 3, 2),
+(3, 'Robert Brown', '2021-01-10', 'robert.brown@example.com', 50000, 2, 4),
+(4, 'Emily Johnson', '2018-11-30', 'emily.johnson@example.com', 90000, 4, 1),
+(5, 'Michael Lee', '2022-03-05', 'michael.lee@example.com', 55000, 5, 5);
+
+
+3.Write a query to display employee name , department , country and designation of HR department
+
+SELECT `employees`.`name`, `departments`.`department_name`,`countries`.`country_name`
+FROM `employees`
+JOIN `departments` ON `employees`.`department_id` = `departments`.`department_id`
+JOIN `locations` ON `departments`.`location_id` = `locations`.`location_id`
+JOIN `countries` ON `locations`.`country_id` = `countries`.`country_id`
+WHERE `departments`.`department_name` = 'Human Resources ';
+
+4. Write a query to employee name who is taking second highest salary using sub query concept
+
+SELECT `name` FROM `employees` WHERE salary < (SELECT MAX(`employees`.`salary`) FROM `employees`)
+ORDER BY `employees`.`salary` DESC LIMIT 1;
+
+5.Write a SQL statement to update the email column of Employee table with 'not available' for those employees with department name 'Finance'
+
+UPDATE `employees`
+SET email = "not available"
+WHERE `employees`.`department_id` = (SELECT `departments`.`department_id` FROM `departments` WHERE `departments`.`department_name` = 'Finance');
+
+6. Write a SQL statement to add a new column 'year_of_establishment' to 'Departments' table
+ALTER TABLE `departments`
+ADD COLUMN year_of_eastablishment varchar(50);
+
+7. Write a Query to display the employee id , name and designation_title for all employees whose salary is more than any average salary of any department
+SELECT `employees`.`emp_id`, `employees`.`name`,`designations`.`designation_title`
+FROM `employees` 
+JOIN `designations` ON `employees`.`designation_id` = `designations`.`designation_id`
+WHERE `employees`.`salary` > (SELECT AVG(`employees`.`salary`) FROM `employees`);
+
+8. Write a parameterized procedure to display employee name , department and country by passing employee id and country name as parameter
+
+DELIMITER $$
+CREATE PROCEDURE displayDetails(employee_id int, country_name varchar(20))
+BEGIN
+	SELECT `employees`.`name`, `departments`.`department_name`, `countries`.`country_name`
+    FROM `employees`
+    JOIN `departments` ON `employees`.`department_id` = `departments`.`department_id`
+    JOIN `locations` ON `departments`.`location_id` = `locations`.`location_id`
+    JOIN `countries` ON `locations`.`country_id` = `countries`.`country_id`
+    WHERE `countries`.`country_name` = country_name AND `employees`.`emp_id` = 		employee_id;
+END$$
+DELIMITER ;
+
+9.Write a  query to illustrate the concept of complex views
+
+DROP VIEW IF EXISTS displayDetails;
+CREATE VIEW displayDetails AS
+	SELECT `employees`.`NAME` , `departments`.`department_name` , 
+	`countries`.`country_name` , SUM(`employees`.`salary`)
+    FROM `employees`
+    JOIN `departments` ON `employees`.`department_id` = `departments`.`department_id`
+    JOIN `locations` ON `departments`.`location_id` = `locations`.`location_id`
+    JOIN `countries` ON `locations`.`country_id` = `countries`.`country_id`
+    GROUP BY `employees`.`department_id` ;
+
+
+10.Write a SQL statement that will create a trigger which whenever an employee is deleted, the employee id and name will be inserted in a archived table
+
+CREATE TABLE deleted(
+	employee_id int,
+    employee_name varchar(20)
+);
+DELIMITER $$
+CREATE TRIGGER trashEmployee
+AFTER DELETE ON `employees`
+FOR EACH ROW
+BEGIN
+	INSERT INTO deleted(employee_id, employee_name) VALUES(OLD.emp_id, OLD.name);
+END $$
+DELIMITER ;
